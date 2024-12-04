@@ -12,6 +12,7 @@ import com.imshawan.rest.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,8 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
@@ -45,10 +48,13 @@ public class UserController {
             return ResponseEntity.badRequest().body(httpError);
         }
 
+        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("USER"));
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setFullname(request.getFullname());
+        user.setAuthorities(authorities);
 
         User userResp = userService.registerUser(user, request.getPassword());
         ApiResponse apiResponse = new ApiResponse(req, userResp);

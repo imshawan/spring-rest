@@ -129,4 +129,8 @@ public class User {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
+
+    public void setAuthorities(Set<SimpleGrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 }
