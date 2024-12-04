@@ -4,8 +4,13 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 @Document(collection = "users")
 public class User {
@@ -38,6 +43,8 @@ public class User {
 
     private Boolean isActive;
 
+    Set<SimpleGrantedAuthority> authorities;
+
     // Constructors
     public User() {}
 
@@ -50,6 +57,7 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
+        this.authorities = Collections.singleton(new SimpleGrantedAuthority("USER"));
     }
 
     // Getters and Setters
@@ -76,6 +84,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     public String getPasswordHash() {
