@@ -38,7 +38,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public final List<String> UNAUTHENTICATED_ROUTES = List.of(
             "/api/users/register",
-            "/api/users/signin");
+            "/api/users/signin",
+            "/uploads/**"
+            );
 
     private UserService getUserService() {
         return applicationContext.getBean(UserService.class);

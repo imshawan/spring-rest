@@ -31,6 +31,8 @@ public class User {
     @JsonIgnore
     private String passwordHash;
 
+    private String profilePicture;
+
     @NotBlank(message = "Full name is required")
     @Size(min = 1, max = 20, message = "Full name must be between 1 and 20 characters")
     private String fullname;
@@ -53,6 +55,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.profilePicture = "";
         this.fullname = fullname;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -132,5 +135,13 @@ public class User {
 
     public void setAuthorities(Set<SimpleGrantedAuthority> authorities) {
         this.authorities = authorities;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePicture(String profilePicture) {
+        return profilePicture;
     }
 }

@@ -4,6 +4,7 @@ import com.imshawan.rest.model.User;
 import com.imshawan.rest.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -74,4 +75,9 @@ public class UserService {
 
         return Optional.empty();
     }
+
+    public boolean hasAdminAuthority(Authentication authentication) {
+        return authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+    }
+    
 }

@@ -1,5 +1,6 @@
 package com.imshawan.rest.exception;
 
+import com.imshawan.rest.exceptions.EntityNotFoundException;
 import com.imshawan.rest.response.HTTPError;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,10 +10,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * @author Shawan Mandal <github@imshawan.dev>
@@ -75,5 +78,44 @@ public class GlobalExceptionHandler {
         httpError.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
 
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(httpError);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<HTTPError> handleRuntimeException(RuntimeException ex, HttpServletRequest request,
+            HttpServletResponse response) {
+        HTTPError httpError = new HTTPError(request, response);
+        httpError.setMessage(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(httpError);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<HTTPError> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request,
+            HttpServletResponse response) {
+        HTTPError httpError = new HTTPError(request, response);
+        httpError.setMessage(ex.getMessage());
+        httpError.setStatus(HttpStatus.NOT_FOUND.value());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(httpError);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<HTTPError> handleMissingServletRequestPartException(MissingServletRequestPartException ex,
+            HttpServletRequest request, HttpServletResponse response) {
+        HTTPError httpError = new HTTPError(request, response);
+        httpError.setMessage(ex.getMessage());
+        httpError.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(httpError);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<HTTPError> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request,
+            HttpServletResponse response) {
+        HTTPError httpError = new HTTPError(request, response);
+        httpError.setMessage(ex.getMessage());
+        httpError.setStatus(HttpStatus.FORBIDDEN.value());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(httpError);
     }
 }
