@@ -55,8 +55,8 @@ This starter project provides a ready-to-use setup for quickly bootstrapping Spr
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/imshawan/spring-rest.git
-cd spring-rest
+git clone https://github.com/imshawan/spring-rest-service.git
+cd spring-rest-service
 ```
 
 2. Configure the application properties:
@@ -138,7 +138,7 @@ We welcome contributions to this project! If you'd like to contribute, please fo
 1. **Fork the repository**: Create your own fork of the project on GitHub.
 2. **Clone the repository**: Clone your fork to your local machine to work on it.
    ```bash
-   git clone https://github.com/imshawan/spring-rest.git
+   git clone https://github.com/imshawan/spring-rest-service.git
    ```
 3. **Create a new branch**: Create a new branch to work on your changes.
    ```bash
