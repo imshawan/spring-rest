@@ -162,10 +162,15 @@ We welcome contributions to this project! If you'd like to contribute, please fo
 - Ensure all tests pass before submitting a pull request.
 - Be respectful and considerate when interacting with the community.
 
+## **To-Do**
+
+- [ ] Implement Swagger for API documentation
+- [ ] Add unit and integration tests
+- [ ] Enhance error handling and logging
 
 ## **License**
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ## **Author**
 
