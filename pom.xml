@@ -18,8 +18,16 @@
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
-	</developers>
+        <developer>
+            <id>imshawan</id>
+            <name>Shawan Mandal</name>
+            <email>github@imshawan.dev</email>
+            <url>https://www.imshawan.dev</url>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+        </developer>
+    </developers>
 	<scm>
 		<connection/>
 		<developerConnection/>
