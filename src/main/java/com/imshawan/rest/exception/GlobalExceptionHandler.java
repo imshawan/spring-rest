@@ -118,4 +118,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(httpError);
     }
+
+    @ExceptionHandler(NoSuchMethodError.class)
+    public ResponseEntity<HTTPError> handleNoSuchMethodError(NoSuchMethodError ex, HttpServletRequest request,
+            HttpServletResponse response) {
+        HTTPError httpError = new HTTPError(request, response);
+        httpError.setMessage(ex.getMessage());
+        httpError.setStatus(HttpStatus.NOT_FOUND.value());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(httpError);
+    }
 }
