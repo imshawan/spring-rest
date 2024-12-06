@@ -39,7 +39,11 @@ public class JwtFilter extends OncePerRequestFilter {
     public final List<String> UNAUTHENTICATED_ROUTES = List.of(
             "/api/users/register",
             "/api/users/signin",
-            "/uploads/**"
+            "/uploads/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/actuator/**",
+            "/v3/**"
             );
 
     private UserService getUserService() {
