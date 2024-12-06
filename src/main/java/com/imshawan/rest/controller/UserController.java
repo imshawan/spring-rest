@@ -15,6 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,6 +32,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "Users onboarding & management APIs", description = "Endpoints for users registration and management")
 public class UserController {
 
     @Autowired
@@ -39,7 +45,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest request, HttpServletRequest req, HttpServletResponse response) {
+    @Operation(
+            summary = "Register a new user",
+            description = "Registers a new user with username, email, fullname, and password. This endpoint does not require authentication.",
+            security = {},
+            responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200", description = "User registered successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400", description = "Username or email already exists",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = HTTPError.class))
+            )
+    })
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest request, HttpServletRequest req,
+            HttpServletResponse response) {
         if (userService.isUsernameOrEmailTaken(request.getUsername(), request.getEmail())) {
             HTTPError httpError = new HTTPError(req, response);
             httpError.setMessage("Username or email already exists");
@@ -64,6 +85,22 @@ public class UserController {
     }
 
     @PostMapping("/signin")
+    @Operation(
+            summary = "Sign in a user",
+            description = "Authenticates a user using their username or email and password. Returns a JWT token upon successful authentication which can be used further to access other endpoints. This endpoint does not require authentication.",
+            security = {},
+            responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Sign-in successful",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "401",
+                    description = "Invalid username or password",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = HTTPError.class))
+            )
+    })
     public ResponseEntity<?> signIn(@Valid @RequestBody SigninRequest signInRequest, HttpServletRequest request,
             HttpServletResponse response) {
         String usernameOrEmail = signInRequest.getUsername();
@@ -78,7 +115,7 @@ public class UserController {
             authenticatedUser = userService.authenticateByUsername(usernameOrEmail, password);
         }
 
-        if (!authenticatedUser.isEmpty()) {
+        if (authenticatedUser.isPresent()) {
 
             String token = jwtUtil.generateToken(usernameOrEmail);
             Map<String, Object> responsePayload = new HashMap<>();
@@ -101,6 +138,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get user profile",
+            description = "Fetches the user profile based on the provided user ID.", responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
+                    description = "User profile found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
+                    description = "User not found")
+    })
     public ResponseEntity<User> getUserProfile(@PathVariable String id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok)
@@ -108,6 +158,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Update user profile",
+            description = "Updates the user profile for the specified user ID.", responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
+                    description = "User profile updated successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
+                    description = "User not found")
+    })
     public ResponseEntity<User> updateUserProfile(@PathVariable String id, @Valid @RequestBody User user) {
         Optional<User> updatedUser = userService.updateUserById(id, user);
         return updatedUser.map(ResponseEntity::ok)
@@ -115,6 +177,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete user profile",
+            description = "Deletes the user profile for the specified user ID.", responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204",
+                    description = "User profile deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
+                    description = "User not found")
+    })
     public ResponseEntity<Void> deleteUserProfile(@PathVariable String id) {
         boolean deleted = userService.deleteUserById(id);
         if (deleted) {

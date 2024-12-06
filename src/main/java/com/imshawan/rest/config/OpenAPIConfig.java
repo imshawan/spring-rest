@@ -11,6 +11,8 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class OpenAPIConfig {
@@ -42,6 +44,13 @@ public class OpenAPIConfig {
         .description("This API exposes endpoints to manage users onboarding and validation.").termsOfService("#")
         .license(mitLicense);
 
-    return new OpenAPI().info(info).servers(List.of(server));
+    return new OpenAPI().info(info).addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+            .components(new io.swagger.v3.oas.models.Components()
+                    .addSecuritySchemes("bearerAuth",
+                            new SecurityScheme()
+                                    .name("bearerAuth")
+                                    .type(SecurityScheme.Type.HTTP)
+                                    .scheme("bearer")
+                                    .bearerFormat("JWT"))).servers(List.of(server));
   }
 }
