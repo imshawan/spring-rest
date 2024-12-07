@@ -83,6 +83,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<HTTPError> handleRuntimeException(RuntimeException ex, HttpServletRequest request,
             HttpServletResponse response) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+
         HTTPError httpError = new HTTPError(request, response);
         httpError.setMessage(ex.getMessage());
 
@@ -92,6 +94,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<HTTPError> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request,
             HttpServletResponse response) {
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+
         HTTPError httpError = new HTTPError(request, response);
         httpError.setMessage(ex.getMessage());
         httpError.setStatus(HttpStatus.NOT_FOUND.value());
@@ -102,6 +106,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<HTTPError> handleMissingServletRequestPartException(MissingServletRequestPartException ex,
             HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+
         HTTPError httpError = new HTTPError(request, response);
         httpError.setMessage(ex.getMessage());
         httpError.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -112,6 +118,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<HTTPError> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request,
             HttpServletResponse response) {
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+
         HTTPError httpError = new HTTPError(request, response);
         httpError.setMessage(ex.getMessage());
         httpError.setStatus(HttpStatus.FORBIDDEN.value());
@@ -122,6 +130,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchMethodError.class)
     public ResponseEntity<HTTPError> handleNoSuchMethodError(NoSuchMethodError ex, HttpServletRequest request,
             HttpServletResponse response) {
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+
         HTTPError httpError = new HTTPError(request, response);
         httpError.setMessage(ex.getMessage());
         httpError.setStatus(HttpStatus.NOT_FOUND.value());

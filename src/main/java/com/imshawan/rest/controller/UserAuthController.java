@@ -32,15 +32,15 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "Users onboarding & management APIs", description = "Endpoints for users registration and management")
-public class UserController {
+@Tag(name = "Users onboarding & Authentication APIs", description = "Endpoints for users registration and signing in")
+public class UserAuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserAuthController(UserService userService) {
         this.userService = userService;
     }
 
@@ -134,63 +134,6 @@ public class UserController {
             httpError.setMessage("Invalid username or password");
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(httpError);
-        }
-    }
-
-    @GetMapping("/{id}")
-    @Operation(
-            summary = "Get user profile",
-            description = "Fetches the user profile based on the provided user ID.", responses = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
-                    description = "User profile found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)
-                    )
-            ),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
-                    description = "User not found")
-    })
-    public ResponseEntity<User> getUserProfile(@PathVariable String id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    @Operation(
-            summary = "Update user profile",
-            description = "Updates the user profile for the specified user ID.", responses = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
-                    description = "User profile updated successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))
-            ),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
-                    description = "User not found")
-    })
-    public ResponseEntity<User> updateUserProfile(@PathVariable String id, @Valid @RequestBody User user) {
-        Optional<User> updatedUser = userService.updateUserById(id, user);
-        return updatedUser.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Delete user profile",
-            description = "Deletes the user profile for the specified user ID.", responses = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204",
-                    description = "User profile deleted successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
-                    description = "User not found")
-    })
-    public ResponseEntity<Void> deleteUserProfile(@PathVariable String id) {
-        boolean deleted = userService.deleteUserById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
     }
 }

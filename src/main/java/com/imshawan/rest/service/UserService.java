@@ -1,12 +1,16 @@
 package com.imshawan.rest.service;
 
+import com.imshawan.rest.dto.UserUpdateRequest;
+import com.imshawan.rest.exceptions.EntityNotFoundException;
 import com.imshawan.rest.model.User;
 import com.imshawan.rest.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -50,12 +54,28 @@ public class UserService {
         });
     }
 
-    public boolean deleteUserById(String id) {
+    public User updateUserDataById(String id, UserUpdateRequest user) {
+        Optional<User> existingUser = userRepository.findById(id);
+        if (existingUser.isEmpty()) {
+            throw new EntityNotFoundException("User", id);
+        }
+
+        User userData = existingUser.get();
+        if (StringUtils.hasText(user.getFullname())) {
+            userData.setFullname(user.getFullname());
+        }
+        if (StringUtils.hasText(user.getProfilePicture())) {
+            userData.setProfilePicture(user.getProfilePicture());
+        }
+
+        return userRepository.save(userData);
+    }
+
+    public void deleteUserById(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return true;
+            throw new EntityNotFoundException("User", id);
         }
-        return false;
     }
 
     public Optional<User> authenticateByEmail(String email, String password) {

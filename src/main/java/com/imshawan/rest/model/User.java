@@ -141,7 +141,7 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public String getProfilePicture(String profilePicture) {
+    public String getProfilePicture() {
         return profilePicture;
     }
 }
