@@ -85,6 +85,10 @@ mvn spring-boot:run
 
 Base URL: `http://localhost:8080`
 
+5. Access Swagger API documentation:
+
+Swagger documentation will be available at `http://localhost:8080/swagger-ui/index.html` after starting the application.
+
 ## API Endpoints
 
 | HTTP Method | Endpoint                              | Description                                      | Request Body                                          | Response                                     |
@@ -131,6 +135,16 @@ Example:
 }
 ```
 
+## Swagger Integration
+
+Swagger has been implemented to provide detailed API documentation and testing interface.
+
+- Swagger Configuration: The project includes a preconfigured Swagger setup to auto-generate documentation for the defined REST API endpoints.
+
+- Accessing Swagger UI: Navigate to `http://localhost:8080/swagger-ui/index.html` to interactively explore and test the APIs.
+
+Swagger setup is located in `OpenAPIConfig` class, ensuring all endpoints are documented and available for testing.
+
 ## **Contributing**
 
 We welcome contributions to this project! If you'd like to contribute, please follow these steps:
@@ -164,7 +178,7 @@ We welcome contributions to this project! If you'd like to contribute, please fo
 
 ## **To-Do**
 
-- [ ] Implement Swagger for API documentation
+- [x] Implement Swagger for API documentation
 - [ ] Add unit and integration tests
 - [ ] Enhance error handling and logging
 
